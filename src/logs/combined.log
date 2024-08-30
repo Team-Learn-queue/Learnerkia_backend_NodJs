@@ -1,0 +1,27 @@
+2024-08-30 11:45:38 [info]: GET /
+2024-08-30 11:47:32 [info]: GET /
+2024-08-30 11:47:51 [info]: GET /
+2024-08-30 11:48:24 [info]: GET / function status(code) {
+  if ((typeof code === 'string' || Math.floor(code) !== code) && code > 99 && code < 1000) {
+    deprecate('res.status(' + JSON.stringify(code) + '): use res.status(' + Math.floor(code) + ') instead')
+  }
+  this.statusCode = code;
+  return this;
+}
+2024-08-30 11:48:27 [info]: GET / function status(code) {
+  if ((typeof code === 'string' || Math.floor(code) !== code) && code > 99 && code < 1000) {
+    deprecate('res.status(' + JSON.stringify(code) + '): use res.status(' + Math.floor(code) + ') instead')
+  }
+  this.statusCode = code;
+  return this;
+}
+2024-08-30 11:48:29 [info]: GET / function status(code) {
+  if ((typeof code === 'string' || Math.floor(code) !== code) && code > 99 && code < 1000) {
+    deprecate('res.status(' + JSON.stringify(code) + '): use res.status(' + Math.floor(code) + ') instead')
+  }
+  this.statusCode = code;
+  return this;
+}
+2024-08-30 11:52:01 [info]: GET / 304
+2024-08-30 11:52:05 [info]: GET / 304
+2024-08-30 11:53:56 [info]: GET / 304
