@@ -1,4 +1,6 @@
 import express, { Application, Request, Response, NextFunction } from "express";
+import routes from './routes/index.router';
+import { errorHandler } from './middlewares/errorHandler.middleware';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import logger from './utils/logger';
@@ -8,7 +10,6 @@ dotenv.config()
 
 
 const app: Application = express();
-const port = process.env.PORT;
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.on('finish', () => {
@@ -27,6 +28,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 app.use(bodyParser.json());
+app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
   cors({
@@ -37,6 +39,9 @@ app.use(
   })
 )
 
+app.use('/api/v3', routes);
+app.use(errorHandler);
+
 app.get("/", (req: Request, res: Response) => {
   res.json({
     success: true,
@@ -44,6 +49,5 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+
+export default app;
