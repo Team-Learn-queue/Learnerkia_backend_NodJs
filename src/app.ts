@@ -1,7 +1,7 @@
 import express, { Application, Request, Response, NextFunction } from "express";
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import logger from './logger';
+import logger from './utils/logger';
 import dotenv from 'dotenv';
 
 dotenv.config()
