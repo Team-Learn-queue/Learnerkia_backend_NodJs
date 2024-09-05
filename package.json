@@ -4,7 +4,8 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon src/server.ts",
-    "dev": "npx tsc && node dist/server.js",
+    "dev": "npx ts-node-dev src/server.ts",
+    "compile": "npx tsc && node dist/server.js",
     "build": "tsc -p . --watch",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -24,6 +25,9 @@
     "express-validator": "^7.2.0",
     "mysql2": "^3.11.0",
     "openai": "^4.57.1",
+    "pg": "^8.12.0",
+    "sequelize": "^6.37.3",
+    "sequelize-typescript": "^2.1.6",
     "winston": "^3.14.2"
   },
   "devDependencies": {

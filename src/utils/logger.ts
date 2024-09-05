@@ -7,7 +7,7 @@ const logger = createLogger({
     format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
     format.printf(({ timestamp, level, message }) => {
       return `${timestamp} [${level}]: ${message}`;
-    }),
+    })
   ),
   transports: [
     new transports.File({ filename: "src/logs/error.log", level: "error" }),
@@ -19,7 +19,7 @@ const logger = createLogger({
         format.colorize(),
         format.printf(({ timestamp, level, message }) => {
           return `${timestamp} [${level}]: ${message}`;
-        }),
+        })
       ),
     }),
   ],

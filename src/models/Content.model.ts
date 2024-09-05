@@ -1,20 +1,45 @@
-import pool from '../config/db';
+import { DataTypes, Model, Optional } from 'sequelize';
+import sequelize from '../config/db';
 
-export interface Content {
+interface ContentAttributes {
   id?: number;
   title: string;
   type: 'video' | 'audio' | 'document';
   data: string;
   instructorId: number;
-  createdAt?: Date;
 }
 
-export const createContent = async (content: Content): Promise<Content> => {
-  const [result] = await pool.query('INSERT INTO contents SET ?', content);
-  return { id: (result as any).insertId, ...content };
-};
+interface ContentCreationAttributes extends Optional<ContentAttributes, 'id'> {}
 
-export const findContentById = async (id: number): Promise<Content | null> => {
-  const [rows] = await pool.query('SELECT * FROM contents WHERE id = ?', [id]);
-  return (rows as Content[])[0] || null;
-};
+export class Content extends Model<ContentAttributes, ContentCreationAttributes>
+  implements ContentAttributes {
+  public id!: number;
+  public title!: string;
+  public type!: 'video' | 'audio' | 'document';
+  public data!: string;
+  public instructorId!: number;
+}
+
+Content.init({
+  title: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  }, 
+  type: {
+    type: DataTypes.ENUM('video', 'audio', 'document'),
+    allowNull: false,
+  }, 
+  data: {
+    type: DataTypes.STRING,
+  },
+  instructorId: {
+    type: DataTypes.INTEGER,
+  }
+}, {
+  sequelize,
+  modelName: "Content",
+  tableName: "contents",
+  timestamps: true
+});
+
+

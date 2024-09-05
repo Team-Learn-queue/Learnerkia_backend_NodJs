@@ -1,18 +1,18 @@
 import express, { Application, Request, Response, NextFunction } from "express";
-import routes from './routes/index.router';
-import { errorHandler } from './middlewares/errorHandler.middleware';
-import cors from 'cors';
-import bodyParser from 'body-parser';
-import logger from './utils/logger';
-import dotenv from 'dotenv';
+import routes from "./routes/index.routes";
+import sequelize from "./config/db";
+import { errorHandler } from "./middlewares/errorHandler.middleware";
+import cors from "cors";
+import bodyParser from "body-parser";
+import logger from "./utils/logger";
+import dotenv from "dotenv";
 
-dotenv.config()
-
+dotenv.config();
 
 const app: Application = express();
 
 app.use((req: Request, res: Response, next: NextFunction) => {
-  res.on('finish', () => {
+  res.on("finish", () => {
     const logMessage = `${req.method} ${req.url} ${res.statusCode}`;
 
     if (Object.keys(req.query).length) {
@@ -32,15 +32,21 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: [
-
-    ],
+    origin: "*",
     credentials: true,
   })
-)
+);
 
-app.use('/api/v3', routes);
+app.use("/api/v3", routes);
 app.use(errorHandler);
+
+sequelize.sync({ alter: true })
+  .then(() => {
+    console.log("Database synchronized successfully.");
+  })
+  .catch((error: any) => {
+    console.error("Unable to synchronize the database:", error);
+  })
 
 app.get("/", (req: Request, res: Response) => {
   res.json({
@@ -48,6 +54,5 @@ app.get("/", (req: Request, res: Response) => {
     message: "Hello Learnerkia",
   });
 });
-
 
 export default app;
