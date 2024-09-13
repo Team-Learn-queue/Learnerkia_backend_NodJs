@@ -1,23 +1,13 @@
-// import pool from '../config/db';
-
-// export interface Assessment {
-//   id?: number;
-//   question: string;
-//   answer: string;
-//   contentId: number;
-//   createdAt?: Date;
-// }
-
-
-import { DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes, Model, ModelStatic, Optional } from 'sequelize';
 import sequelize from '../config/db';
-import { Content } from './Content.model';
 
 interface AssessmentAttributes {
   id?: number;
-  question: string;
-  answer: string;
-  contentId: number;
+  title: string;
+  description: string;
+  file?: string;
+  courseId: string;
+  createdBy: number;
 }
 
 interface AssessmentCreationAttributes extends Optional<AssessmentAttributes, 'id'> {}
@@ -25,32 +15,35 @@ interface AssessmentCreationAttributes extends Optional<AssessmentAttributes, 'i
 export class Assessment extends Model<AssessmentAttributes, AssessmentCreationAttributes>
   implements AssessmentAttributes {
   public id!: number;
-  public question!: string;
-  public answer!: string;
-  public contentId!: number;
+  public title!: string;
+  public description!: string;
+  public file!: string;
+  public courseId!: string;
+  public createdBy!: number;
+  static associate: (models: { Course: ModelStatic<Model<any, any>>; Submission: ModelStatic<Model<any, any>>; }) => void;
 }
 
 
-// export class Assessment extends Model {
-//   id: any;
-// };
-
 Assessment.init({
-  question: {
+  title: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  description: {
     type: DataTypes.STRING,
     allowNull: false,
   }, 
-  answer: {
+  file: {
     type: DataTypes.STRING,
     allowNull: false,
   }, 
-  contentId: {
+  courseId: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
+  createdBy: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    references: {
-      model: Content,
-      key: 'id',
-    },
   }
 }, {
   sequelize,
@@ -59,4 +52,3 @@ Assessment.init({
   timestamps: true,
 })
 
-Assessment.belongsTo(Content, { foreignKey: 'contentId' });

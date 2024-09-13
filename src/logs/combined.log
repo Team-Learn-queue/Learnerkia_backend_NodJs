@@ -43,3 +43,11 @@
 2024-09-04 16:55:59 [info]: POST /api/v3/content/ 500 - Request Body: {"title":"Climates in Africa","type":"document","instructorId":74}
 2024-09-04 16:56:33 [info]: POST /api/v3/content/ 500 - Request Body: {"title":"Climates in Africa","type":"document","instructorId":74}
 2024-09-04 17:00:39 [info]: POST /api/v3/content/ 500 - Request Body: {"title":"Climates in Africa","type":"document","instructorId":74}
+2024-09-06 10:20:15 [info]: POST /api/v3/content/ 500 - Request Body: {"title":"Climates in Africa","type":"document","instructorId":74}
+2024-09-06 10:22:08 [info]: POST /api/v3/content/ 500 - Request Body: {"title":"Climates in Africa","type":"document","instructorId":74}
+2024-09-06 13:04:01 [info]: POST /api/v3/content/ 500 - Request Body: {"title":"Climates in Africa","type":"document","instructorId":74}
+2024-09-06 16:35:50 [info]: POST /api/v3/content/ 500 - Request Body: {"title":"Climates in Africa","type":"document","instructorId":74}
+2024-09-06 16:35:56 [info]: POST /api/v3/content/ 500 - Request Body: {"title":"Climates in Africa","type":"document","instructorId":74}
+2024-09-06 16:37:00 [info]: POST /api/v3/content/ 500 - Request Body: {"title":"Climates in Africa","type":"document","instructorId":74}
+2024-09-09 16:04:43 [info]: POST /api/v3/content/ 500 - Request Body: {"title":"Climates in Africa","type":"document","instructorId":74}
+2024-09-10 15:44:26 [info]: GET / 200
