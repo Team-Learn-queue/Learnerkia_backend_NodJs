@@ -1,15 +1,34 @@
 import express, { Application, Request, Response, NextFunction } from "express";
 import routes from "./routes/index.routes";
+import cors from "cors";
+import dotenv from "dotenv";
+import bodyParser from "body-parser";
+// import fileUpload from "express-fileupload";
 import sequelize from "./config/db";
 import { errorHandler } from "./middlewares/errorHandler.middleware";
-import cors from "cors";
-import bodyParser from "body-parser";
 import logger from "./utils/logger";
-import dotenv from "dotenv";
 
 dotenv.config();
 
 const app: Application = express();
+
+app.use(
+  cors({
+    origin: "*",
+    credentials: true,
+  })
+);
+
+// app.use(fileUpload());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use("/api/v3", routes);
+
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
+
+app.use(errorHandler);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.on("finish", () => {
@@ -27,18 +46,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   });
   next();
 });
-app.use(bodyParser.json());
-app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(
-  cors({
-    origin: "*",
-    credentials: true,
-  })
-);
-
-app.use("/api/v3", routes);
-app.use(errorHandler);
 
 sequelize.sync({ alter: true })
   .then(() => {

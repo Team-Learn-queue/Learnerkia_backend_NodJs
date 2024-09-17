@@ -13,40 +13,41 @@
 //   return { id: (result as any).insertId, ...assignment };
 // };
 
+import { DataTypes, Model } from "sequelize";
+import sequelize from "../config/db";
+import { Assessment } from "./Assessment.model";
 
-import { DataTypes, Model } from 'sequelize';
-import sequelize from '../config/db';
-import { Assessment } from './Assessment.model';
+export class Assignment extends Model {}
 
-
-export class Assignment extends Model {};
-
-Assignment.init({
-  learnerId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  }, 
-  assessmentId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: Assessment,
-      key: 'id',
+Assignment.init(
+  {
+    learnerId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
-  }, 
-  assignedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
+    assessmentId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: Assessment,
+        key: "id",
+      },
+    },
+    assignedAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
+    groupId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
   },
-  groupId: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
+  {
+    sequelize,
+    modelName: "Assignment",
+    tableName: "assignments",
+    timestamps: true,
   }
-}, {
-  sequelize,
-  modelName: "Assignment",
-  tableName: "assignments",
-  timestamps: true
-});
+);
 
-Assignment.belongsTo(Assessment, { foreignKey: 'assessmentId' });
+Assignment.belongsTo(Assessment, { foreignKey: "assessmentId" });

@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
-import { CustomError, ErrorType } from './CustomError.middleware';
+import { Request, Response, NextFunction } from "express";
+import { CustomError, ErrorType } from "./CustomError.middleware";
 
 export const errorHandler = (
   err: CustomError,
@@ -23,13 +23,11 @@ export const errorHandler = (
       success: false,
       error: {
         type: ErrorType.INTERNAL_SERVER,
-        message: 'An unexpected error occurred.',
+        message: "An unexpected error occurred.",
       },
     });
   }
 };
-
-
 
 // import { Request, Response, NextFunction } from 'express';
 

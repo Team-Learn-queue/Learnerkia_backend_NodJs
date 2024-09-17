@@ -1,0 +1,33 @@
+export class SubmissionController {
+  async submitAssessment(req: Request, res: Response): Promise<void> {
+    try {
+      const { answerText, assessmentId } = req.body;
+      const { learnerId } = req.query;
+      const file = req.files?.file; // Access the file from req.files
+
+      let fileUploadResult: any = null;
+
+      if (file) {
+        const s3Params = {
+          Bucket: process.env.AWS_BUCKET!,
+          Key: `${Date.now()}-${file.name}`,
+          Body: file.data, // Using file.data
+          ContentType: file.mimetype,
+        };
+
+        fileUploadResult = await s3.upload(s3Params).promise();
+      }
+
+      const submission = await Submission.create({
+        answerText,
+        learnerId: Number(learnerId),
+        assessmentId: Number(assessmentId),
+        submittedFile: fileUploadResult ? fileUploadResult.Location : null,
+      });
+
+      return ResponseHandler.success(req, submission, "Assessment submitted successfully");
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+}
