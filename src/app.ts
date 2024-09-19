@@ -47,13 +47,14 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-sequelize.sync({ alter: true })
-  .then(() => {
-    console.log("Database synchronized successfully.");
-  })
-  .catch((error: any) => {
-    console.error("Unable to synchronize the database:", error);
-  })
+// sequelize
+//   .sync({ alter: true })
+//   .then(() => {
+//     console.log("Database synchronized successfully.");
+//   })
+//   .catch((error: any) => {
+//     console.error("Unable to synchronize the database:", error);
+//   });
 
 app.get("/", (req: Request, res: Response) => {
   res.json({

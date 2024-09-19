@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import { CustomError, ErrorType } from "../middlewares/CustomError.middleware";
 import { ResponseHandler } from "../middlewares/ResponseHandler.middlewares";
 import { Assessment } from "../models/Assessment.model";
 import { Submission } from "../models/Submission.model";
@@ -7,33 +6,14 @@ import { s3 } from '../utils/upload.util';
 
 
 export class AssessmentController {
-  // async generateAndAssignQuestions(req: Request, res: Response, next: NextFunction): Promise<void> {
-  // try {
-  //   const { contentId, learnerIds, groupId } = req.body;
-
-  //   if (!contentId || !Array.isArray(learnerIds) || learnerIds.length === 0) {
-  //     throw new CustomError(
-  //       ErrorType.BAD_REQUEST,
-  //       'contentId and a non-empty array of learnerIds are required.',
-  //       400
-  //     );
-  //   }
-
-  //   await assessmentService.generateAndAssignQuestions(contentId, learnerIds, groupId);
-  //   ResponseHandler.success(res, null, 'Assessments generated and assigned successfully.', 201);
-  // } catch (error) {
-  //   next(error);
-  // }
-  // }
-
   async createAssessment(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      const { title, description, courseId } = req.body;
-      const { instructorId } = req.query;
+      const { title, question, highestAttainableScore } = req.body;
+      const { courseId , instructorId} = req.params
       const file = req.file;
   
       let fileUploadResult: any = null;
@@ -55,7 +35,8 @@ export class AssessmentController {
   
       const assessment = await Assessment.create({
         title,
-        description,
+        question,
+        highestAttainableScore,
         file: fileUploadResult ? fileUploadResult.Location : null,
         courseId,
         createdBy: Number(instructorId),
@@ -71,9 +52,8 @@ export class AssessmentController {
       next(error);
     }
   }
-  
 
-  async getLearnersForAssessment(
+  async getSubmissionsForAssessment(
     req: Request,
     res: Response,
     next: NextFunction
@@ -81,37 +61,74 @@ export class AssessmentController {
     try {
       const { assessmentId } = req.params;
 
+      const assessment = await Assessment.findByPk(Number(assessmentId));
+      if (!assessment) {
+        return ResponseHandler.failure(res, "Assessment not found", 404);
+      }
+
       const submissions = await Submission.findAll({
         where: { id: Number(assessmentId) },
-        include: [{ model: Submission, as: "submission" }],
+        // include: [{ model: Submission, as: "submission" }],
       });
 
       res
         .status(200)
-        .json({ message: "Learners fetched successfully", data: submissions });
+        .json({ message: "Submissions fetched successfully", data: submissions });
     } catch (error) {
       next(error);
     }
   }
 
-  // async gradeLearner(req: Request, res: Response, next: NextFunction): Promise<void> {
-  //   try {
-  //     const { learnerId, assessmentId, score, comments } = req.body;
+  async gradeSubmission(req: Request, res: Response): Promise<void> {
+    try {
+      const { submissionId, instructorId } = req.params;
+      const { score, comments } = req.body;
+  
+      const submission = await Submission.findByPk(submissionId);
+  
+      if (!submission) throw new Error('Submission not found');
 
-  //     const submission = await Submission.findOne({
-  //       where: { learnerId, assessmentId },
-  //       include: [{ model: Assessment, as 'assessment'}]
-  //     })
+      const assessment = await Assessment.findByPk(submission.assessmentId);
 
-  //     if (!submission) throw new Error('Submission not found');
+      if (!assessment) {
+        return ResponseHandler.failure(
+          res, 
+          'Associated assessment not found',
+          404
+        )
+      }
 
-  //     submission.score = score;
-  //     submission.comments = comments;
-  //     await submission.save();
+      if (assessment.createdBy !== Number(instructorId)) {
+        return ResponseHandler.failure(
+          res, 
+          'You are not authorized to grade this assessment',
+          403
+        )
+      }
 
-  //     return ResponseHandler.success(res, submission, 'Learner graded successfully')
-  //   } catch (error) {
-  //     next(error);
-  //   };
-  // };
+      if (submission.score !== null) {
+        return ResponseHandler.failure(
+          res, 
+          'This submission has already been graded.',
+          400
+        )
+      }
+
+      if (score > assessment.highestAttainableScore) {
+        return ResponseHandler.failure(
+          res, 
+          `Score cannot exceed the highest attainable score of ${assessment.highestAttainableScore}.`,
+          400
+        )
+      }
+    
+      submission.score = score;
+      submission.comments = comments;
+      await submission.save();
+  
+      res.status(200).json({ message: 'Submission graded successfully', data: submission });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  };
 }

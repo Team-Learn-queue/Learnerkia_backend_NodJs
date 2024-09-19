@@ -106,3 +106,8 @@
 2024-09-17 14:41:24 [info]: GET /api/assessments/submit 404
 2024-09-17 14:41:25 [info]: GET /api/assessments/submit 404
 2024-09-17 14:41:56 [info]: GET /api/v3/assessments/submit 404
+2024-09-19 10:35:55 [info]: POST /api/v3/assessments/create?instructorId=74 404 - Query Params: {"instructorId":"74"}
+2024-09-19 10:35:55 [info]: POST /api/v3/assessments/create?instructorId=74 404
+2024-09-19 11:47:29 [info]: POST /api/v3/assessments/submit?learnerId=13 404 - Query Params: {"learnerId":"13"}
+2024-09-19 11:47:29 [info]: POST /api/v3/assessments/submit?learnerId=13 404
+2024-09-19 13:34:38 [info]: POST /api/v3/assessments/submit/13/7 404

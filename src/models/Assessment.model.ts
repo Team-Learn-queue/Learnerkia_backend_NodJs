@@ -4,7 +4,8 @@ import sequelize from "../config/db";
 interface AssessmentAttributes {
   id?: number;
   title: string;
-  description: string;
+  question: string;
+  highestAttainableScore: number;
   file?: string;
   courseId: string;
   createdBy: number;
@@ -19,7 +20,8 @@ export class Assessment
 {
   public id!: number;
   public title!: string;
-  public description!: string;
+  public question!: string;
+  public highestAttainableScore!: number
   public file!: string;
   public courseId!: string;
   public createdBy!: number;
@@ -35,9 +37,13 @@ Assessment.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    description: {
+    question: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    highestAttainableScore: {
+      type: DataTypes.INTEGER,
+      allowNull: false
     },
     file: {
       type: DataTypes.STRING,
