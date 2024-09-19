@@ -120,5 +120,10 @@ export const viewLearnersValidator = [
     .isNumeric()
     .withMessage("Please provide the assessment ID"),
 
+  param("instructorId")
+    .notEmpty()
+    .isNumeric()
+    .withMessage("Please provide the instructor ID as an integer"),
+
   errorResponse,
 ];

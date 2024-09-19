@@ -59,16 +59,20 @@ export class AssessmentController {
     next: NextFunction
   ) {
     try {
-      const { assessmentId } = req.params;
+      const { assessmentId, instructorId } = req.params;
 
-      const assessment = await Assessment.findByPk(Number(assessmentId));
+      const assessment = await Assessment.findOne({
+        where: {
+          id: Number(assessmentId), 
+          createdBy: Number(instructorId)
+        }
+      })
       if (!assessment) {
-        return ResponseHandler.failure(res, "Assessment not found", 404);
+        return ResponseHandler.failure(res, "Assessment not found for this instructor", 404);
       }
 
       const submissions = await Submission.findAll({
-        where: { id: Number(assessmentId) },
-        // include: [{ model: Submission, as: "submission" }],
+        where: { assessmentId: Number(assessmentId) },
       });
 
       res

@@ -25,7 +25,7 @@ router.put(
 ); 
 
 router.get(
-  "/submissions/:assessmentId",
+  "/submissions/:instructorId/:assessmentId",
   ...viewLearnersValidator,
   getSubmissionsForAssessment
 );
