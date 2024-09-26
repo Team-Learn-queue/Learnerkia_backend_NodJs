@@ -12,9 +12,9 @@ export class AssessmentController {
     req: Request,
     res: Response,
     next: NextFunction
-  ): Promise<void> {
+  ) {
     try {
-      const { title, question, highestAttainableScore } = req.body;
+      const { title, question, highestAttainableScore, markingGuide } = req.body;
       const { courseId, instructorId } = req.params;
       const file = req.file;
 
@@ -44,6 +44,14 @@ export class AssessmentController {
         courseId,
         createdBy: Number(instructorId),
       });
+
+      await MarkingGuide.create({
+        assessmentId: assessment.id,
+        question: markingGuide.question,
+        expectedAnswer: markingGuide.expectedAnswer,
+        keywords: markingGuide.keywords,
+        maxScore: highestAttainableScore,
+      })
 
       return ResponseHandler.success(
         res,
@@ -91,7 +99,7 @@ export class AssessmentController {
     }
   }
 
-  async gradeSubmission(req: Request, res: Response): Promise<void> {
+  async gradeSubmission(req: Request, res: Response) {
     try {
       const { submissionId, instructorId } = req.params;
       const { score, comments, useAI } = req.body;

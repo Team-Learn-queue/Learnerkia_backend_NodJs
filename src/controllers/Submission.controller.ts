@@ -6,7 +6,7 @@ import { s3 } from "../utils/upload.util";
 import multer from "multer";
 
 export class SubmissionController {
-  async submitAssessment(req: Request, res: Response): Promise<void> {
+  async submitAssessment(req: Request, res: Response) {
     try {
       const { answerText } = req.body;
       const { assessmentId, learnerId } = req.params;

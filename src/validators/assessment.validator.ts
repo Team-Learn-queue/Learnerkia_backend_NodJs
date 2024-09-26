@@ -2,6 +2,41 @@ import { Request, Response, NextFunction } from "express";
 import { param, body, validationResult, query } from "express-validator";
 import { upload } from "../utils/upload.util";
 
+
+const validateMarkingGuide = [
+  body("markingGuide")
+    .optional()
+    .bail()
+    .custom((value) => {
+      if (typeof value !== "object" || value === null) {
+        throw new Error("Marking guide must be an object");
+      }
+
+      const { question, expectedAnswer, keywords } = value;
+
+      if (!question || typeof question !== "string") {
+        throw new Error("Marking guide must contain a valid question");
+      }
+
+      if (!expectedAnswer || typeof expectedAnswer !== "string") {
+        throw new Error("Marking guide must contain a valid expectedAnswer");
+      }
+
+      if (!Array.isArray(keywords)) {
+        throw new Error("Keywords must be an array of strings");
+      }
+
+      for (let keyword of keywords) {
+        if (typeof keyword !== "string") {
+          throw new Error("All keywords must be valid strings");
+        }
+      }
+
+      return true; 
+    }),
+];
+
+
 const validateOptionalFile = [
   (req: Request, res: Response, next: NextFunction) => {
     if (req.file) {
@@ -66,6 +101,8 @@ export const createAssessmentValidator = [
     .withMessage(
       "Please provide the highest attaniable score and as an integer"
     ),
+
+  validateMarkingGuide,
 
   validateOptionalFile,
 
