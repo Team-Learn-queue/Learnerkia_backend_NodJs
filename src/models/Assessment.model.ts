@@ -2,7 +2,7 @@ import { DataTypes, Model, ModelStatic, Optional } from "sequelize";
 import sequelize from "../config/db";
 
 interface AssessmentAttributes {
-  id?: number;
+  id: string;
   title: string;
   question: string;
   highestAttainableScore: number;
@@ -18,7 +18,7 @@ export class Assessment
   extends Model<AssessmentAttributes, AssessmentCreationAttributes>
   implements AssessmentAttributes
 {
-  public id!: number;
+  public id!: string;
   public title!: string;
   public question!: string;
   public highestAttainableScore!: number
@@ -33,6 +33,12 @@ export class Assessment
 
 Assessment.init(
   {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      allowNull: false, 
+      primaryKey: true
+    },
     title: {
       type: DataTypes.STRING,
       allowNull: false,

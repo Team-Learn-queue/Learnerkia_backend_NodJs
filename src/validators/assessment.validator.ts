@@ -111,6 +111,13 @@ export const gradeAssessmentValidator = [
 
   body("comments").optional().isString(),
 
+  body("useAI")
+    .notEmpty()
+    .isBoolean()
+    .withMessage(
+      "Please select if you want learners' submissions to be graded automatically or manually"
+    ),
+
   errorResponse,
 ];
 
